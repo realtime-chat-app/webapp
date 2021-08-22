@@ -1,0 +1,33 @@
+@import "themes";
+
+@import "~@nebular/theme/styles/globals";
+
+@include nb-install() {
+  @include nb-theme-global();
+}
+/* You can add global styles to this file, and also import other style files */
+//Remove outline from elements when clicking
+body:not(.user-is-tabbing) button:focus,
+body:not(.user-is-tabbing) div:focus,
+body:not(.user-is-tabbing) input:focus,
+body:not(.user-is-tabbing) select:focus,
+body:not(.user-is-tabbing) textarea:focus,
+body:not(.user-is-tabbing) li:focus {
+  outline: none;
+}
+
+.toast-without-message .content-container .message {
+  display: none;
+}
+
+.text-overflow-ellipsis {
+  overflow: hidden;
+  width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+
+  > * {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}

@@ -1,0 +1,18 @@
+<button
+  nbButton
+  outline
+  status="primary"
+  [fullWidth]="fullWidth"
+  [nbSpinner]="loading"
+  [disabled]="disabled"
+  [ghost]="ghost"
+  [style]="styles"
+>
+  <nb-icon
+    *ngIf="icon"
+    [icon]="icon"
+    [status]="iconStatus"
+    style="margin: 0 !important"
+  ></nb-icon>
+  {{ text }}
+</button>

@@ -1,0 +1,74 @@
+<nb-layout>
+  <nb-layout-column style="padding: 0">
+    <div class="container">
+      <nb-card class="rounded">
+        <nb-card-body>
+          <div class="login-form-container">
+            <nb-icon class="chat-icon" icon="message-circle-outline"></nb-icon>
+            <h6>Faça login para começar a conversar!</h6>
+            <form [formGroup]="form">
+              <nb-form-field>
+                <nb-icon nbPrefix icon="at-outline" pack="eva"></nb-icon>
+                <input
+                  class="rounded"
+                  fullWidth
+                  type="text"
+                  nbInput
+                  shape="round"
+                  formControlName="email"
+                  placeholder="exemplo@email.com"
+                  appFormControlStatus
+                  [control]="controls.email"
+                  status
+                />
+              </nb-form-field>
+              <nb-form-field>
+                <nb-icon nbPrefix icon="lock-outline" pack="eva"></nb-icon>
+                <input
+                  class="rounded"
+                  fullWidth
+                  [type]="showPassword ? 'text' : 'password'"
+                  nbInput
+                  shape="round"
+                  formControlName="password"
+                  placeholder="Senha"
+                  appFormControlStatus
+                  [control]="controls.password"
+                  status
+                />
+                <span
+                  nbSuffix
+                  nbButton
+                  ghost
+                  (click)="showPassword = !showPassword"
+                >
+                  <nb-icon
+                    [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'"
+                    pack="eva"
+                    [attr.aria-label]="
+                      showPassword ? 'hide password' : 'show password'
+                    "
+                  >
+                  </nb-icon>
+                </span>
+              </nb-form-field>
+              <app-primary-outline-btn
+                class="submit-btn"
+                [text]="'ENTRAR'"
+                [fullWidth]="true"
+                [loading]="loading"
+                [disabled]="!form.valid || loading"
+                (click)="loading ? '' : submit()"
+                status="warning"
+              ></app-primary-outline-btn>
+            </form>
+          </div>
+          <span class="text-hint">Não possui uma conta?&nbsp;</span>
+          <a routerLink="../registrar" style="text-decoration: none"
+            >Registre-se!</a
+          >
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </nb-layout-column>
+</nb-layout>

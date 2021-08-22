@@ -1,0 +1,58 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 100%;
+  min-height: 100%;
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
+
+.chat-icon {
+  width: 4rem;
+  height: 4rem;
+  margin: auto;
+}
+
+h6 {
+  margin: 0 auto 1rem auto;
+}
+
+.login-form-container {
+  display: flex;
+  flex-direction: column;
+  min-width: 350px;
+  min-height: 300px;
+
+  > h5 {
+    text-align: center;
+  }
+}
+.login-form-container > form > * {
+  margin-bottom: 1rem;
+}
+
+form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.img-container {
+  width: 100%;
+  max-width: 200px;
+  margin: auto auto 1rem auto;
+
+  > img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media only screen and (max-width: 350px) {
+  .login-form-container {
+    max-width: 100%;
+  }
+}

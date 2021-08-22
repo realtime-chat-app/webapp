@@ -1,0 +1,101 @@
+<nb-layout>
+  <nb-layout-column style="padding: 0">
+    <div class="container">
+      <nb-card class="rounded">
+        <nb-card-body>
+          <div class="register-form-container">
+            <h6>Crie a sua conta!</h6>
+            <form [formGroup]="form">
+              <nb-form-field>
+                <nb-icon nbPrefix icon="person-outline" pack="eva"></nb-icon>
+                <input
+                  class="rounded"
+                  fullWidth
+                  type="text"
+                  nbInput
+                  shape="round"
+                  formControlName="name"
+                  placeholder="Seu nome"
+                  appFormControlStatus
+                  [control]="controls.name"
+                  status
+                />
+              </nb-form-field>
+              <nb-form-field>
+                <nb-icon nbPrefix icon="at-outline" pack="eva"></nb-icon>
+                <input
+                  class="rounded"
+                  fullWidth
+                  type="text"
+                  nbInput
+                  shape="round"
+                  formControlName="email"
+                  placeholder="exemplo@email.com"
+                  appFormControlStatus
+                  [control]="controls.email"
+                  status
+                />
+              </nb-form-field>
+              <nb-form-field>
+                <nb-icon nbPrefix icon="lock-outline" pack="eva"></nb-icon>
+                <input
+                  class="rounded"
+                  fullWidth
+                  [type]="showPassword ? 'text' : 'password'"
+                  nbInput
+                  shape="round"
+                  formControlName="password"
+                  placeholder="Senha"
+                  appFormControlStatus
+                  [control]="controls.password"
+                  status
+                />
+              </nb-form-field>
+              <nb-form-field>
+                <nb-icon nbPrefix icon="lock-outline" pack="eva"></nb-icon>
+                <input
+                  class="rounded"
+                  fullWidth
+                  [type]="showPassword ? 'text' : 'password'"
+                  nbInput
+                  shape="round"
+                  formControlName="confirm"
+                  placeholder="Confirme sua senha"
+                  appFormControlStatus
+                  [control]="controls.confirm"
+                  status
+                />
+                <span
+                  nbSuffix
+                  nbButton
+                  ghost
+                  (click)="showPassword = !showPassword"
+                >
+                  <nb-icon
+                    [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'"
+                    pack="eva"
+                    [attr.aria-label]="
+                      showPassword ? 'hide password' : 'show password'
+                    "
+                  >
+                  </nb-icon>
+                </span>
+              </nb-form-field>
+              <app-primary-outline-btn
+                class="submit-btn"
+                [text]="'ENTRAR'"
+                [fullWidth]="true"
+                [loading]="loading"
+                [disabled]="!form.valid || loading || registered"
+                (click)="loading ? '' : submit()"
+                status="warning"
+              ></app-primary-outline-btn>
+            </form>
+          </div>
+          <span class="text-hint">Já possui uma conta?&nbsp;</span>
+          <a routerLink="../login" style="text-decoration: none">Faça login!</a>
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </nb-layout-column>
+</nb-layout>
