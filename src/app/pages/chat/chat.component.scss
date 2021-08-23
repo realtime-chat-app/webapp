@@ -1,0 +1,5 @@
+::ng-deep {
+  .dropped-files > .ng-star-inserted[style] + .ng-star-inserted {
+    display: none;
+  }
+}

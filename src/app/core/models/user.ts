@@ -5,6 +5,7 @@ export class User {
   ssn?: string | number;
   email: string;
   password?: string;
+  avatar: string;
 
   constructor(props: User) {
     this.id = props.id;
@@ -13,5 +14,6 @@ export class User {
     this.ssn = props.ssn;
     this.email = props.email;
     this.password = props.password;
+    this.avatar = props.avatar;
   }
 }
