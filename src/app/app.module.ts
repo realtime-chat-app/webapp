@@ -14,6 +14,7 @@ import {
   NbWindowModule,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { IConfig, NgxMaskModule } from 'ngx-mask';
 
 import { AppRoutingModule } from './app-routing.module';
 import { LayoutModule } from '@layout/layout.module';
@@ -25,6 +26,11 @@ import { AppComponent } from './app.component';
 
 registerLocaleData(localePt);
 
+const maskConfigFunction: () => Partial<IConfig> = () => {
+  return {
+    validation: false,
+  };
+};
 
 @NgModule({
   declarations: [
@@ -44,6 +50,7 @@ registerLocaleData(localePt);
     NbMenuModule.forRoot(),
     CoreModule,
     LayoutModule,
+    NgxMaskModule.forRoot(maskConfigFunction),
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-BR' },

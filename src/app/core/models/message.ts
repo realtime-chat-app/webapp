@@ -3,15 +3,17 @@ import { User } from "./user";
 
 export class Message {
   id?: string;
+  chatId?: string;
+  senderId?: string;
   type: 'text' | 'file' | 'map' | 'quote';
   text: string;
   reply: boolean;
   user: User;
-  createdAt: Date;
+  createdAt?: Date;
   files: NbChatMessageFile[];
   quote: string;
-  latitude: number;
-  longitude: number;
+  latitude?: number;
+  longitude?: number;
 
   constructor(props: Message) {
     this.id = props.id;
@@ -24,5 +26,7 @@ export class Message {
     this.quote = props.quote;
     this.latitude = props.latitude;
     this.longitude = props.longitude;
+    this.senderId = props.user.id;
+    this.chatId = props.chatId;
   }
 };

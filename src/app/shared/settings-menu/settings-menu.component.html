@@ -1,0 +1,20 @@
+<div class="container">
+  <ng-container
+    *ngTemplateOutlet="userTpl; context: { user: user$ | async }"
+  ></ng-container>
+</div>
+
+<ng-template #userTpl let-user="user">
+  <ng-container *ngIf="user; else loadingTpl">
+    <nb-icon
+      nbButton
+      icon="settings-outline"
+      [nbContextMenu]="(menuItems$ | async)!"
+      [nbContextMenuTag]="menuTag"
+    ></nb-icon>
+  </ng-container>
+</ng-template>
+
+<ng-template #loadingTpl>
+  <span>carregando</span>
+</ng-template>

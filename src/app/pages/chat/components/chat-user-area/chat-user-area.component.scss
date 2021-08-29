@@ -1,0 +1,10 @@
+.container {
+  margin: 0;
+
+  > nb-card-body {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 10px;
+  }
+}

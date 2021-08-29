@@ -1,0 +1,40 @@
+<div class="container">
+  <nb-chat
+    *ngIf="chat; else emptyChat"
+    [title]="(chatTitle(chat!) | async)!"
+    size="large"
+    [noMessagesPlaceholder]="'Esta conversa não possui mensagens'"
+  >
+    <nb-chat-message
+      *ngFor="let msg of messages"
+      [type]="msg.type"
+      [message]="msg.text"
+      [reply]="isReply$(msg) | async"
+      [sender]="msg.user.name"
+      [date]="msg.createdAt!"
+      [files]="msg.files"
+      [quote]="msg.quote"
+      [latitude]="msg.latitude || 0"
+      [longitude]="msg.longitude || 0"
+      [avatar]="msg.user.avatar"
+    >
+    </nb-chat-message>
+    <nb-chat-form
+      [dropFilePlaceholder]="'Arraste um arquivo para enviar'"
+      [messagePlaceholder]="'Digite uma mensagem'"
+      (send)="sendMessage($event)"
+      [dropFiles]="true"
+    >
+    </nb-chat-form>
+  </nb-chat>
+</div>
+
+<ng-template #emptyChat>
+  <nb-card class="empty-chat">
+    <nb-card-body>
+      <div class="empty-chat-content">
+        <h1>Selecione uma conversa para abrir o chat</h1>
+      </div>
+    </nb-card-body>
+  </nb-card>
+</ng-template>

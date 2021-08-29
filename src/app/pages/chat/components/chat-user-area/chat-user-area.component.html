@@ -1,0 +1,16 @@
+<nb-card class="container">
+  <nb-card-body>
+    <ng-container
+      *ngTemplateOutlet="avatar; context: { user: (user$ | async) }"
+    ></ng-container>
+    <chat-start-new-chat></chat-start-new-chat>
+    <app-settings-menu></app-settings-menu>
+  </nb-card-body>
+</nb-card>
+
+<ng-template #avatar let-user="user">
+  <nb-user
+    [name]="user.name"
+    [picture]="user.avatar || 'assets/img/noimage.png'"
+  ></nb-user>
+</ng-template>

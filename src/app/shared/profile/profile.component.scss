@@ -1,0 +1,28 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.user-avatar {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 0 1rem 0;
+
+  > :not(:last-child) {
+    margin-bottom: 0.5rem;
+  }
+}
+
+.user-form {
+  display: flex;
+  flex-direction: column;
+}
+
+form {
+  > :not(:last-child) {
+    margin-bottom: 1rem;
+  }
+}

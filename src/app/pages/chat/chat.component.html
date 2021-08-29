@@ -1,23 +1,22 @@
-<nb-chat [title]="'Chat em tempo real'" size="large">
-  <nb-chat-message
-    *ngFor="let msg of messages"
-    [type]="msg.type"
-    [message]="msg.text"
-    [reply]="msg.reply"
-    [sender]="msg.user.name"
-    [date]="msg.createdAt"
-    [files]="msg.files"
-    [quote]="msg.quote"
-    [latitude]="msg.latitude"
-    [longitude]="msg.longitude"
-    [avatar]="msg.user.avatar"
-  >
-  </nb-chat-message>
-  <nb-chat-form
-    [dropFilePlaceholder]="'Arraste um arquivo para enviar'"
-    [messagePlaceholder]="'Digite uma mensagem'"
-    (send)="sendMessage($event)"
-    [dropFiles]="true"
-  >
-  </nb-chat-form>
-</nb-chat>
+<div class="container">
+  <div>
+    <ng-container
+      *ngTemplateOutlet="chatsContainer; context: { chats: (chats$ | async) }"
+    >
+    </ng-container>
+  </div>
+  <chat-conversation
+    class="conversation"
+    [chat]="currentChat$.asObservable() | async"
+  ></chat-conversation>
+</div>
+
+<ng-template #chatsContainer let-chats="chats">
+  <ng-container *ngIf="chats">
+    <chat-user-area [chats]="chats"></chat-user-area>
+    <chat-list
+      [chats]="chats"
+      (chatSelected)="chatSelected($event)"
+    ></chat-list>
+  </ng-container>
+</ng-template>

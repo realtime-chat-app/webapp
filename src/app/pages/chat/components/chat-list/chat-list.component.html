@@ -1,0 +1,39 @@
+<nb-card>
+  <nb-card-body>
+    <nb-list>
+      <nb-list-item
+        class="list-item"
+        *ngFor="let chat of chats"
+        (click)="openChat(chat)"
+      >
+        <nb-user
+          onlyPicture
+          [picture]="(getChatPicture(chat) | async)!"
+        ></nb-user>
+        <div class="quick-info">
+          <span style="grid-area: chat-name">
+            {{ getChatName(chat) | async }}
+          </span>
+          <span
+            class="text-hint text-overflow-ellipsis"
+            style="grid-area: last-message"
+          >
+            {{ lastChatMessage(chat) | async }}
+          </span>
+          <span class="text-hint" style="grid-area: message-time">
+            {{ "2021-08-24T21:05:08.390Z" | date: "HH:mm" }}
+          </span>
+          <span
+            style="grid-area: unread-count; position: relative; right: -15px"
+          >
+            <nb-badge
+              [text]="'10'"
+              status="success"
+              position="top left"
+            ></nb-badge>
+          </span>
+        </div>
+      </nb-list-item>
+    </nb-list>
+  </nb-card-body>
+</nb-card>

@@ -31,3 +31,9 @@ body:not(.user-is-tabbing) li:focus {
     overflow: hidden;
   }
 }
+
+.start-new-chat-modal {
+  nb-card > nb-card-body {
+    padding: 0 !important;
+  }
+}

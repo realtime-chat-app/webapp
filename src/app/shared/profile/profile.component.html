@@ -1,0 +1,45 @@
+<div class="container">
+  <div class="user-avatar">
+    <nb-user
+      class="user-area"
+      size="large"
+      color="var(--dark-grey-300)"
+      [name]="user?.name!"
+      [showName]="false"
+      [showTitle]="false"
+    >
+    </nb-user>
+    <span>{{ user?.name }}</span>
+    <span>{{ user?.email }}</span>
+  </div>
+  <div class="user-form">
+    <form [formGroup]="form!">
+      <nb-form-field>
+        <nb-icon
+          nbPrefix
+          icon="person-outline"
+          pack="eva"
+          status="primary"
+        ></nb-icon>
+        <input
+          fullWidth
+          type="text"
+          nbInput
+          formControlName="name"
+          placeholder="Seu nome"
+          appFormControlStatus
+          [control]="controls.name"
+          status
+        />
+      </nb-form-field>
+      <app-primary-outline-btn
+        class="submit-btn"
+        [text]="'ATUALIZAR'"
+        [fullWidth]="true"
+        [loading]="(loading$ | async)!"
+        (click)="submit()"
+        [disabled]="(disableFormBtn$ | async)!"
+      ></app-primary-outline-btn>
+    </form>
+  </div>
+</div>

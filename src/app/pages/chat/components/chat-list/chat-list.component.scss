@@ -1,0 +1,27 @@
+nb-card {
+  margin: 0;
+  height: 100%;
+  width: 100%;
+  max-height: calc(100vh - 106px);
+}
+
+nb-card-body {
+  padding: 0;
+}
+
+.list-item {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 15px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.quick-info {
+  display: grid;
+  grid-template-areas:
+    "chat-name message-time"
+    "last-message unread-count";
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}

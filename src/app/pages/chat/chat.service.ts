@@ -1,8 +1,11 @@
 import { Injectable } from "@angular/core";
 
+import { Observable } from "rxjs";
+
+import { SocketService } from "@shared/socket";
 import { AuthService } from "@core/services";
 
-import { Message } from "@core/models";
+import { Chat, Member, Message } from "@core/models";
 
 
 @Injectable({
@@ -10,22 +13,28 @@ import { Message } from "@core/models";
 })
 export class ChatService {
 
-  constructor(private authService: AuthService) { }
+  constructor(
+    private authService: AuthService,
+    private socketService: SocketService,
+  ) { }
 
-  fakeMessages(): Message[] {
-    const user = this.authService.currentUserValue;
-    return [
-      new Message({
-        createdAt: new Date(),
-        files: [],
-        user,
-        reply: false,
-        latitude: 1239,
-        longitude: 12937,
-        quote: 'quote aqui',
-        type: 'text',
-        text: 'Arroz é bão demais',
-      }),
-    ];
+  public emit(eventName: string, payload: any) {
+    return this.socketService.emit(eventName, payload);
+  }
+
+  public initialChats$(): Observable<Chat[]> {
+    return this.socketService.fromEvent$('chats');
+  }
+
+  public chatMembers$(chat: Chat): Observable<Member[]> {
+    return this.socketService.fromEvent$(`chat?id=${chat.id}:get-members`);
+  }
+
+  public newChats$(): Observable<Chat> {
+    return this.socketService.fromEvent$(`chat:new-chat`);
+  }
+
+  public newMessage$(): Observable<Message> {
+    return this.socketService.fromEvent$(`new-message`);
   }
 }

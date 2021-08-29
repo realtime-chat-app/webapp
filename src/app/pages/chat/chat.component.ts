@@ -1,59 +1,77 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { SocketService } from '@shared/socket';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { map, take, takeUntil } from 'rxjs/operators';
+
+import { AuthService } from '@core/services';
 import { ChatService } from './chat.service';
 
-import { ChatDropFileEvent, Message, SendChatMessageEvent } from '@core/models';
+import { Chat } from '@core/models';
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
 
-  public messages: Message[];
+  private unsubscribe$ = new Subject<boolean>();
+  public _chats$ = new BehaviorSubject<Chat[]>([]);
+  public chats$: Observable<Chat[]>;
+  public currentChat$ = new BehaviorSubject<Chat>(null!);
 
   constructor(
-    private socketService: SocketService,
+    private authService: AuthService,
     private service: ChatService,
   ) {
-    this.messages = [...this.service.fakeMessages()];
+    this.chats$ = this._chats$.asObservable()
+      .pipe(
+        map(chats => {
+          return chats.sort((a, b) => {
+            const aDate = a.createdAt?.toString() as string;
+            const bDate = b.createdAt?.toString() as string;
+            return aDate.localeCompare(bDate.toString());
+          });
+        })
+      );
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.getInitialChats();
+    this.newChatStarted();
   }
 
-  sendMessage(event: SendChatMessageEvent) {
-    const files = !event.files ? [] :
-      (event.files as ChatDropFileEvent[])
-        .map((file) => {
-          return {
-            url: file.src,
-            type: file.type,
-            icon: 'file-text-outline',
-          };
-        });
+  ngOnDestroy() {
+    this.unsubscribe$.next(true);
+    this.unsubscribe$.complete();
+  }
 
-    this.messages.push({
-      latitude: -1054051,
-      longitude: 56159051,
-      text: event.message,
-      createdAt: new Date(),
-      reply: true,
-      type: files.length ? 'file' : 'text',
-      files: files,
-      user: {
-        name: 'Jonh Doe',
-        avatar: 'https://i.gifer.com/no.gif',
-        email: 'algum@algum.com',
-        id: 'askdo1-aosdk'
-      },
-      quote: 'Alguma mensagem quote aqui',
-    });
-    // const botReply = this.chatShowcaseService.reply(event.message);
-    // if (botReply) {
-    //   setTimeout(() => { this.messages.push(botReply) }, 500);
-    // }
+  public chatSelected(chat: Chat) {
+    this.currentChat$.next(chat);
+  }
+
+  private addNewChatsToCache(chats: Chat[]) {
+    console.log(chats);
+
+    const currentChats = this._chats$.value;
+    this._chats$.next([...chats, ...currentChats]);
+  }
+
+  private getInitialChats() {
+    return this.service.initialChats$()
+      .pipe(take(1))
+      .subscribe(chats => this.addNewChatsToCache(chats));
+  }
+
+  private newChatStarted() {
+    this.service.newChats$()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(chat => {
+        this.addNewChatsToCache([chat]);
+
+        if (chat.userId === this.authService.currentUserValue.id) {
+          this.currentChat$.next(chat);
+        }
+      });
   }
 }
