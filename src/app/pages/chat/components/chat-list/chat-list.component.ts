@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
-import { Observable, of, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
 
 import { ChatService } from '@pages/chat/chat.service';
 import { AuthService } from '@core/services';
@@ -44,7 +44,7 @@ export class ChatListComponent implements OnInit, OnDestroy {
         map(members => {
           if (chat.title) return chat.title;
 
-          let member = members.find(m => m.userId != this.user.id);
+          let member = (members as Member[]).find(m => m.userId != this.user.id);
           if (member) {
             return (member.user as User).name;
           }
@@ -73,7 +73,7 @@ export class ChatListComponent implements OnInit, OnDestroy {
             return chat.picture as string;
           }
 
-          let member = chat.members.find(m => m.userId != this.user.id);
+          let member = (chat.members as Member[]).find(m => m.userId != this.user.id);
           if (member && member.user?.avatar) {
             return (member.user as User).avatar as string;
           }

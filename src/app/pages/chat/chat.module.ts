@@ -1,16 +1,31 @@
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
-import { NbBadgeModule, NbButtonModule, NbCardModule, NbChatModule, NbIconModule, NbListModule, NbUserModule, NbWindowModule } from '@nebular/theme';
+import {
+  NbBadgeModule,
+  NbButtonModule,
+  NbCardModule,
+  NbChatModule,
+  NbCheckboxModule,
+  NbContextMenuModule,
+  NbIconModule,
+  NbListModule,
+  NbUserModule,
+  NbWindowModule,
+} from '@nebular/theme';
 
 import { SettingsMenuModule } from '@shared/settings-menu';
 import { ChatRoutingModule } from './chat-routing.module';
+import { ButtonsModule } from '@shared/buttons';
 
+import {
+  ChatStartNewChatComponent,
+  ChatConversationComponent,
+  ChatUserAreaComponent,
+  ChatListComponent,
+} from './components';
 import { ChatComponent } from './chat.component';
-import { ChatListComponent } from './components/chat-list/chat-list.component';
-import { ChatConversationComponent } from './components/chat-conversation/chat-conversation.component';
-import { ChatUserAreaComponent } from './components/chat-user-area/chat-user-area.component';
-import { ChatStartNewChatComponent } from './components/chat-start-new-chat/chat-start-new-chat.component';
 
 
 @NgModule({
@@ -32,7 +47,12 @@ import { ChatStartNewChatComponent } from './components/chat-start-new-chat/chat
     NbIconModule,
     NbButtonModule,
     NbWindowModule,
+    NbCheckboxModule,
+    NbContextMenuModule,
     SettingsMenuModule,
+    ReactiveFormsModule,
+    FormsModule,
+    ButtonsModule,
   ]
 })
 export class ChatModule { }

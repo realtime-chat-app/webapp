@@ -7,7 +7,7 @@ export class Chat {
   description?: string;
   id?: string;
   isGroup: boolean;
-  members: Partial<Member>[];
+  members: Partial<Member>[] | string[];
   messages?: Partial<Message>[];
   picture?: string;
   title?: string;

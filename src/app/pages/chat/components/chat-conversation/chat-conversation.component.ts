@@ -1,12 +1,19 @@
-import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 
 import { ChatService } from '@pages/chat/chat.service';
 import { AuthService } from '@core/services';
 
-import { Observable, of, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
+import { Observable, of, Subject } from 'rxjs';
 
-import { Chat, ChatDropFileEvent, Message, SendChatMessageEvent, User } from '@core/models';
+import {
+  Chat,
+  ChatDropFileEvent,
+  Member,
+  Message,
+  SendChatMessageEvent,
+  User,
+} from '@core/models';
 
 @Component({
   selector: 'chat-conversation',
@@ -51,7 +58,7 @@ export class ChatConversationComponent implements OnInit, OnDestroy, OnChanges {
         map(() => {
           if (chat?.isGroup) return chat.title as string || '';
 
-          let member = chat?.members.find(m => m.userId != this.user.id);
+          let member = (chat?.members as Member[]).find(m => m.userId != this.user.id);
           if (member) {
             return (member.user as User).name;
           }
@@ -102,6 +109,7 @@ export class ChatConversationComponent implements OnInit, OnDestroy, OnChanges {
       chatId: this.chat?.id,
     });
 
+    // TODO: create ID from here and push messages to server. Await for creation response and display status in screen.
     // this.messages.push(message);
     this.service.emit('message', message);
   }

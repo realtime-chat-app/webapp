@@ -1,23 +1,51 @@
 <nb-icon
   icon="message-circle-outline"
   nbButton
-  (click)="openNewChat()"
+  [nbContextMenu]="menuItems"
+  [nbContextMenuTag]="menuTag"
 ></nb-icon>
 
 <ng-template #modalContent>
-  <nb-list>
-    <nb-list-item
-      *ngFor="let user of users$ | async"
-      nbButton
-      (click)="startChat(user)"
-    >
-      <ng-container
-        *ngTemplateOutlet="avatar; context: { user: user }"
-      ></ng-container>
-    </nb-list-item>
-  </nb-list>
+  <ng-container *ngIf="form && isGroup; else privateChat">
+    <div class="container" [formGroup]="form" style="padding-bottom: 50px">
+      <nb-list>
+        <nb-list-item
+          *ngFor="let user of users$.asObservable() | async; let i = index"
+        >
+          <nb-checkbox nbButton [formControlName]="user.id">
+            <ng-container
+              *ngTemplateOutlet="avatar; context: { user: user }"
+            ></ng-container>
+          </nb-checkbox>
+        </nb-list-item>
+      </nb-list>
+      <div class="send-form-btn">
+        <app-primary-outline-btn
+          [text]="'INICIAR CONVERSA'"
+          [fullWidth]="true"
+          [disabled]="(disableFormSubmissionBtn$() | async)!"
+          (click)="startChat()"
+        ></app-primary-outline-btn>
+      </div>
+    </div>
+  </ng-container>
 </ng-template>
 
+<ng-template #privateChat>
+  <div class="container" *ngIf="form" [formGroup]="form">
+    <nb-list>
+      <nb-list-item
+        *ngFor="let user of users$.asObservable() | async; let i = index"
+        nbButton
+        (click)="startChat(user)"
+      >
+        <ng-container
+          *ngTemplateOutlet="avatar; context: { user: user }"
+        ></ng-container>
+      </nb-list-item>
+    </nb-list>
+  </div>
+</ng-template>
 <ng-template #avatar let-user="user">
   <nb-user
     style="flex: 1"
