@@ -14,7 +14,9 @@ import {
   NbWindowModule,
 } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { IConfig, NgxMaskModule } from 'ngx-mask';
+import { StoreModule } from '@ngrx/store';
 
 import { AppRoutingModule } from './app-routing.module';
 import { LayoutModule } from '@layout/layout.module';
@@ -23,6 +25,9 @@ import { CoreModule } from '@core/core.module';
 import { JwtInterceptor } from '@core/interceptors';
 
 import { AppComponent } from './app.component';
+
+import { metaReducers, reducers } from '@store/reducers';
+import { environment } from '@environment/environment';
 
 registerLocaleData(localePt);
 
@@ -51,6 +56,11 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
     CoreModule,
     LayoutModule,
     NgxMaskModule.forRoot(maskConfigFunction),
+    StoreModule.forRoot({}),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25,
+      logOnly: environment.production,
+    }),
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-BR' },

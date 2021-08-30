@@ -14,10 +14,14 @@ import {
   NbUserModule,
   NbWindowModule,
 } from '@nebular/theme';
+import { StoreModule } from '@ngrx/store';
 
 import { SettingsMenuModule } from '@shared/settings-menu';
 import { ChatRoutingModule } from './chat-routing.module';
 import { ButtonsModule } from '@shared/buttons';
+
+import { FEATURES } from '@store/features';
+import { chatReducer } from './store';
 
 import {
   ChatListUnreadCountComponent,
@@ -55,6 +59,7 @@ import { ChatComponent } from './chat.component';
     ReactiveFormsModule,
     FormsModule,
     ButtonsModule,
+    StoreModule.forFeature(FEATURES.chat, chatReducer),
   ]
 })
 export class ChatModule { }
