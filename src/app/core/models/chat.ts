@@ -13,6 +13,7 @@ export class Chat {
   title?: string;
   updatedAt?: string | Date;
   userId: string;
+  isActive?: boolean;
 
   constructor(props: Chat) {
     this.createdAt = props.createdAt;

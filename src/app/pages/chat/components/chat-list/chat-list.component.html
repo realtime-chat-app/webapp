@@ -3,7 +3,7 @@
     <nb-list>
       <nb-list-item
         class="list-item"
-        *ngFor="let chat of chats"
+        *ngFor="let chat of chats$ | async"
         (click)="openChat(chat)"
       >
         <nb-user
@@ -21,16 +21,15 @@
             {{ lastChatMessage(chat) | async }}
           </span>
           <span class="text-hint" style="grid-area: message-time">
-            {{ "2021-08-24T21:05:08.390Z" | date: "HH:mm" }}
+            {{ lastChatMessageDate(chat) | async }}
           </span>
           <span
             style="grid-area: unread-count; position: relative; right: -15px"
           >
-            <nb-badge
-              [text]="'10'"
-              status="success"
-              position="top left"
-            ></nb-badge>
+            <chat-list-unread-count
+              [chat]="chat"
+              *ngIf="!chat.isActive"
+            ></chat-list-unread-count>
           </span>
         </div>
       </nb-list-item>

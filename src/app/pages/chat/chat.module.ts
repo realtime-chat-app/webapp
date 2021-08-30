@@ -20,6 +20,7 @@ import { ChatRoutingModule } from './chat-routing.module';
 import { ButtonsModule } from '@shared/buttons';
 
 import {
+  ChatListUnreadCountComponent,
   ChatStartNewChatComponent,
   ChatConversationComponent,
   ChatUserAreaComponent,
@@ -34,7 +35,8 @@ import { ChatComponent } from './chat.component';
     ChatListComponent,
     ChatConversationComponent,
     ChatUserAreaComponent,
-    ChatStartNewChatComponent
+    ChatStartNewChatComponent,
+    ChatListUnreadCountComponent
   ],
   imports: [
     CommonModule,
