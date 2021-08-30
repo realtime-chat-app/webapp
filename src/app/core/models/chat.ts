@@ -1,3 +1,4 @@
+import { LastSeen } from "./last-seen";
 import { Message } from "./message";
 import { User } from "./user";
 
@@ -14,6 +15,7 @@ export class Chat {
   updatedAt?: string | Date;
   userId: string;
   isActive?: boolean;
+  lastSeen?: LastSeen;
 
   constructor(props: Chat) {
     this.createdAt = props.createdAt;
@@ -27,6 +29,7 @@ export class Chat {
     this.title = props.title;
     this.updatedAt = props.updatedAt;
     this.userId = props.userId;
+    this.lastSeen = props.lastSeen;
   }
 }
 

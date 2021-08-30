@@ -47,6 +47,7 @@ export class ChatListComponent implements OnInit, OnDestroy, OnChanges {
       if (c.isActive) c.isActive = false;
     });
     chat.isActive = true;
+    this.service.updateLastSeen(chat);
     this.chatSelected.emit(chat);
   }
 

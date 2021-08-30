@@ -9,6 +9,7 @@ import { Observable, of, Subject } from 'rxjs';
 import {
   Chat,
   ChatDropFileEvent,
+  LastSeen,
   Member,
   Message,
   SendChatMessageEvent,
@@ -36,7 +37,6 @@ export class ChatConversationComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnInit(): void {
     this.onNewMessage();
-
   }
 
   ngOnChanges() {
@@ -83,6 +83,7 @@ export class ChatConversationComponent implements OnInit, OnDestroy, OnChanges {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(newMessage => {
         this.messages.push(newMessage);
+        if (this.chat && newMessage.senderId !== this.user.id) this.service.updateLastSeen(this.chat);
       });
   }
 
