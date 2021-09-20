@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 
-import { map, takeUntil } from 'rxjs/operators';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
 import * as moment from 'moment';
 
 import { ChatService } from '@pages/chat/chat.service';

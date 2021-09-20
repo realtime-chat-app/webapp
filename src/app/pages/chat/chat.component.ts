@@ -1,12 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { map, take, takeUntil } from 'rxjs/operators';
+import { take, takeUntil } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { Store } from '@ngrx/store';
 
 import { AuthService } from '@core/services';
 import { ChatService } from './chat.service';
 
-import { Chat } from '@core/models';
+import { selectAllChats, selectCurrentChat } from './store/selectors/chat.selectors';
+import { loadChats, addChat, setCurrentChat } from './store/actions/chat.actions';
+import { addMessages, addMessage, loadMessages } from './store/actions/message.actions';
+import { ChatState } from './store/states';
+
+import { Chat, Message } from '@core/models';
 
 @Component({
   selector: 'app-chat',
@@ -16,24 +22,16 @@ import { Chat } from '@core/models';
 export class ChatComponent implements OnInit, OnDestroy {
 
   private unsubscribe$ = new Subject<boolean>();
-  public _chats$ = new BehaviorSubject<Chat[]>([]);
+  public currentChat$: Observable<Chat>;
   public chats$: Observable<Chat[]>;
-  public currentChat$ = new BehaviorSubject<Chat>(null!);
 
   constructor(
     private authService: AuthService,
+    private store: Store<ChatState>,
     private service: ChatService,
   ) {
-    this.chats$ = this._chats$.asObservable()
-      .pipe(
-        map(chats => {
-          return chats.sort((a, b) => {
-            const aDate = a.createdAt?.toString() as string;
-            const bDate = b.createdAt?.toString() as string;
-            return aDate.localeCompare(bDate.toString());
-          });
-        })
-      );
+    this.chats$ = this.store.select(selectAllChats);
+    this.currentChat$ = this.store.select(selectCurrentChat);
   }
 
   ngOnInit() {
@@ -46,31 +44,27 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.unsubscribe$.complete();
   }
 
-  public chatSelected(chat: Chat) {
-    this.currentChat$.next(chat);
-  }
-
-  private addNewChatsToCache(chats: Chat[]) {
-    console.log(chats);
-
-    const currentChats = this._chats$.value;
-    this._chats$.next([...chats, ...currentChats]);
+  public changeSelectedChat(chat: Chat) {
+    this.store.dispatch(setCurrentChat({ chat }));
   }
 
   private getInitialChats() {
     return this.service.initialChats$()
       .pipe(take(1))
-      .subscribe(chats => this.addNewChatsToCache(chats));
+      .subscribe(chats => {
+        this.store.dispatch(loadChats({ chats }));
+        this.store.dispatch(loadMessages({ chats }));
+      });
   }
 
   private newChatStarted() {
     this.service.newChats$()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(chat => {
-        this.addNewChatsToCache([chat]);
+        this.store.dispatch(addChat({ chat }));
 
         if (chat.userId === this.authService.currentUserValue.id) {
-          this.currentChat$.next(chat);
+          this.changeSelectedChat(chat);
         }
       });
   }

@@ -2,9 +2,10 @@ import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import * as moment from 'moment';
 
 import { Chat } from '@core/models';
-import { FEATURES } from '@store/features';
 
 export enum CHAT_ACTIONS {
+  SetCurrentChat = '[Chat/Service] Set Current Chat',
+  RemoveCurrentChat = '[Chat/Service] Remove Current Chat',
   LoadChat = '[Chat/Service] Load Chats',
   AddChat = '[Chat/Service] Add Chat',
   SetChat = '[Chat/Service] Set Chat',
@@ -21,27 +22,27 @@ export enum CHAT_ACTIONS {
   ClearChats = '[Chat/Service] Clear Chats',
 };
 
-export interface State extends EntityState<Chat> {
+export interface _ChatState extends EntityState<Chat> {
   loading: false,
   error: any,
-  currentChat: any,
+  currentChat: Chat | null,
 };
 
 export interface ChatState {
-  chats: State;
+  chats: _ChatState;
 };
 
-export const adapter: EntityAdapter<Chat> = createEntityAdapter<Chat>({
+export const chatAdapter: EntityAdapter<Chat> = createEntityAdapter<Chat>({
   sortComparer: sortByLastMessageTimestamp,
 });
 
-export const initialChatState: State = adapter.getInitialState({
+export const initialChatState: _ChatState = chatAdapter.getInitialState({
   loading: false,
   error: null,
   currentChat: null,
 });
 
-export function sortByLastMessageTimestamp(a: Chat, b: Chat): number {
+function sortByLastMessageTimestamp(a: Chat, b: Chat): number {
   let aCreatedAt = a.createdAt as Date;
   let bCreatedAt = b.createdAt as Date;
   if (a.messages && b.messages) {

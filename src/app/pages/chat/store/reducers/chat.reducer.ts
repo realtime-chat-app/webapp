@@ -1,54 +1,54 @@
 import { Action, createReducer, on } from '@ngrx/store';
 
-import { initialChatState, adapter, State } from './chat.state';
-import * as ChatActions from './chat.actions';
+import { initialChatState, chatAdapter, _ChatState } from '../states';
+import * as ChatActions from '../actions/chat.actions';
 
 const _chatReducer = createReducer(
   initialChatState,
   on(ChatActions.addChat, (state, { chat }) => {
-    return adapter.addOne(chat, state)
+    return chatAdapter.addOne(chat, state)
   }),
   on(ChatActions.setChat, (state, { chat }) => {
-    return adapter.setOne(chat, state)
+    return chatAdapter.setOne(chat, state)
   }),
   on(ChatActions.upsertChat, (state, { chat }) => {
-    return adapter.upsertOne(chat, state);
+    return chatAdapter.upsertOne(chat, state);
   }),
   on(ChatActions.addChats, (state, { chats }) => {
-    return adapter.addMany(chats, state);
+    return chatAdapter.addMany(chats, state);
   }),
   on(ChatActions.upsertChats, (state, { chats }) => {
-    return adapter.upsertMany(chats, state);
+    return chatAdapter.upsertMany(chats, state);
   }),
   on(ChatActions.updateChat, (state, { update }) => {
-    return adapter.updateOne(update, state);
+    return chatAdapter.updateOne(update, state);
   }),
   on(ChatActions.updateChats, (state, { updates }) => {
-    return adapter.updateMany(updates, state);
+    return chatAdapter.updateMany(updates, state);
   }),
   on(ChatActions.mapChat, (state, { entityMap }) => {
-    return adapter.mapOne(entityMap, state);
+    return chatAdapter.mapOne(entityMap, state);
   }),
   on(ChatActions.mapChats, (state, { entityMap }) => {
-    return adapter.map(entityMap, state);
+    return chatAdapter.map(entityMap, state);
   }),
   on(ChatActions.deleteChat, (state, { id }) => {
-    return adapter.removeOne(id, state);
+    return chatAdapter.removeOne(id, state);
   }),
   on(ChatActions.deleteChats, (state, { ids }) => {
-    return adapter.removeMany(ids, state);
+    return chatAdapter.removeMany(ids, state);
   }),
   on(ChatActions.deleteChatsByPredicate, (state, { predicate }) => {
-    return adapter.removeMany(predicate, state);
+    return chatAdapter.removeMany(predicate, state);
   }),
   on(ChatActions.loadChats, (state, { chats }) => {
-    return adapter.setAll(chats, state);
+    return chatAdapter.setAll(chats, state);
   }),
   on(ChatActions.clearChats, state => {
-    return adapter.removeAll({ ...state });
+    return chatAdapter.removeAll({ ...state });
   })
 );
 
-export function chatReducer(state: State | undefined, action: Action) {
+export function chatReducer(state: _ChatState | undefined, action: Action) {
   return _chatReducer(state, action);
 }

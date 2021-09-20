@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 
+import { Store } from '@ngrx/store';
 import { Observable } from "rxjs";
 
 import { SocketService } from "@shared/socket";
@@ -14,8 +15,8 @@ import { Chat, LastSeen, Member, Message } from "@core/models";
 export class ChatService {
 
   constructor(
-    private authService: AuthService,
     private socketService: SocketService,
+    private authService: AuthService,
   ) { }
 
   public emit(eventName: string, payload: any) {

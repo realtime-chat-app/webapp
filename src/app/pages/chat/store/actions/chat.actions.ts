@@ -1,9 +1,11 @@
 import { Update, EntityMap, EntityMapOne, Predicate } from '@ngrx/entity';
 import { createAction, props } from '@ngrx/store';
 
-import { CHAT_ACTIONS } from './chat.state';
+import { CHAT_ACTIONS } from '../states';
 import { Chat } from '@core/models';
 
+export const setCurrentChat = createAction(CHAT_ACTIONS.SetCurrentChat, props<{ chat: Chat }>());
+export const removeCurrentChat = createAction(CHAT_ACTIONS.RemoveCurrentChat, props<{ chat: Chat }>());
 export const loadChats = createAction(CHAT_ACTIONS.LoadChat, props<{ chats: Chat[] }>());
 export const addChat = createAction(CHAT_ACTIONS.AddChat, props<{ chat: Chat }>());
 export const setChat = createAction(CHAT_ACTIONS.SetChat, props<{ chat: Chat }>());

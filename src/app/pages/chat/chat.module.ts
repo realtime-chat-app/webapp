@@ -21,7 +21,7 @@ import { ChatRoutingModule } from './chat-routing.module';
 import { ButtonsModule } from '@shared/buttons';
 
 import { FEATURES } from '@store/features';
-import { chatReducer } from './store';
+import { reducers } from './store/reducers';
 
 import {
   ChatListUnreadCountComponent,
@@ -59,7 +59,7 @@ import { ChatComponent } from './chat.component';
     ReactiveFormsModule,
     FormsModule,
     ButtonsModule,
-    StoreModule.forFeature(FEATURES.chat, chatReducer),
+    StoreModule.forFeature(FEATURES.chatModule, reducers),
   ]
 })
 export class ChatModule { }

@@ -7,7 +7,7 @@
   </div>
   <chat-conversation
     class="conversation"
-    [chat]="currentChat$.asObservable() | async"
+    [chat]="currentChat$ | async"
   ></chat-conversation>
 </div>
 
@@ -16,7 +16,7 @@
     <chat-user-area [chats]="chats"></chat-user-area>
     <chat-list
       [chats]="chats"
-      (chatSelected)="chatSelected($event)"
+      (chatSelected)="changeSelectedChat($event)"
     ></chat-list>
   </ng-container>
 </ng-template>

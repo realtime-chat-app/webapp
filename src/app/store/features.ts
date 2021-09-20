@@ -1,3 +1,3 @@
 export const FEATURES = {
-  chat: 'chats',
+  chatModule: 'chatModule',
 };
