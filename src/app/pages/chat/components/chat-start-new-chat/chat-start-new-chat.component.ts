@@ -43,7 +43,7 @@ export class ChatStartNewChatComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.menuClickEvents();
-    this.getUsers();
+    // this.getUsers();
   }
 
   ngOnDestroy() {
@@ -115,6 +115,7 @@ export class ChatStartNewChatComponent implements OnInit, OnDestroy {
         filter(menu => menu.tag === this.menuTag)
       )
       .subscribe(menu => {
+        this.getUsers();
         switch (menu.item.title.toLowerCase()) {
           case 'nova conversa':
             this.isGroup = false;
