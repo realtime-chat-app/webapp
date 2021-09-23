@@ -14,21 +14,19 @@
           <span style="grid-area: chat-name">
             {{ getChatName(chat) | async }}
           </span>
-          <span
-            class="text-hint text-overflow-ellipsis"
-            style="grid-area: last-message"
-          >
-            {{ lastChatMessage(chat) | async }}
-          </span>
-          <span class="text-hint" style="grid-area: message-time">
-            {{ lastChatMessageDate(chat) | async }}
-          </span>
+          <ng-container
+            *ngTemplateOutlet="
+              lastSeenTpl;
+              context: { lastSeen: lastSeen(chat) | async }
+            "
+          ></ng-container>
           <span
             style="grid-area: unread-count; position: relative; right: -15px"
           >
             <chat-list-unread-count
+              [unreadCount]="getMessagesUnreadCount(chat) | async"
               [chat]="chat"
-              *ngIf="!chat.isActive"
+              *ngIf="currentChat?.id !== chat.id"
             ></chat-list-unread-count>
           </span>
         </div>
@@ -36,3 +34,15 @@
     </nb-list>
   </nb-card-body>
 </nb-card>
+
+<ng-template #lastSeenTpl let-lastSeen="lastSeen">
+  <span
+    class="text-hint text-overflow-ellipsis"
+    style="grid-area: last-message"
+  >
+    {{ lastSeen.text }}
+  </span>
+  <span class="text-hint" style="grid-area: message-time">
+    {{ lastSeen.date }}
+  </span>
+</ng-template>

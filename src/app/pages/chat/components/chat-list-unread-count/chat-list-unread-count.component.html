@@ -1,12 +1,6 @@
-<ng-template #badge let-count="count">
-  <nb-badge
-    *ngIf="chat && count > 0"
-    [text]="count.toString()"
-    status="success"
-    position="top left"
-  ></nb-badge>
-</ng-template>
-
-<ng-container
-  *ngTemplateOutlet="badge; context: { count: getUnreadCount$() | async }"
-></ng-container>
+<nb-badge
+  *ngIf="chat && (unreadCount || 0) > 0"
+  [text]="(unreadCount || 0).toString()"
+  status="success"
+  position="top left"
+></nb-badge>

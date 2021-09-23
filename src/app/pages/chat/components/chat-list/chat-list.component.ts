@@ -1,40 +1,53 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 import * as moment from 'moment';
 
 import { ChatService } from '@pages/chat/chat.service';
 import { AuthService } from '@core/services';
 
-import { Chat, Member, User } from '@core/models';
+import { selectMessagesByChatId, selectMessagesUnreadCount, updateChat } from '@pages/chat/store';
+import { addMessage } from '../../store/actions/message.actions';
+import { MessageState, ChatState } from '../../store/states';
+
+import { Chat, Member, Message, User } from '@core/models';
 
 @Component({
   selector: 'chat-list',
   templateUrl: './chat-list.component.html',
   styleUrls: ['./chat-list.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatListComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() chats: Chat[] = [];
+  @Input() currentChat: Chat | null = null;
   @Output() chatSelected = new EventEmitter<Chat>();
   private unsubscribe$ = new Subject<boolean>();
   private _chats$ = new BehaviorSubject<Chat[]>([]);
   public chats$: Observable<Chat[]>;
   public user: User;
 
-  constructor(private authService: AuthService, private service: ChatService) {
+  constructor(
+    private authService: AuthService,
+    private service: ChatService,
+    private msgStore: Store<MessageState>,
+    private store: Store<ChatState>,
+  ) {
     this.user = this.authService.currentUserValue;
     this.chats$ = this.getChats$();
   }
 
   ngOnInit() {
+    this.onLastSeenCreated();
+    this.onLastSeenUpdated();
     this.onNewMessage();
   }
 
-  ngOnChanges() {
-    if (this.chats) this._chats$.next(this.chats);
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.chats?.currentValue !== changes.chats?.previousValue) this._chats$.next(this.chats as Chat[]);
   }
 
   ngOnDestroy() {
@@ -43,10 +56,6 @@ export class ChatListComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public openChat(chat: Chat) {
-    this.chats.map(c => {
-      if (c.isActive) c.isActive = false;
-    });
-    chat.isActive = true;
     this.service.updateLastSeen(chat);
     this.chatSelected.emit(chat);
   }
@@ -67,33 +76,29 @@ export class ChatListComponent implements OnInit, OnDestroy, OnChanges {
       );
   }
 
-  public lastChatMessage(chat: Chat): Observable<string> {
-    return of(chat.messages)
+  public lastSeen(chat: Chat): Observable<{ text: string; date: string }> {
+    return this.getChatMessages(chat.id as string)
       .pipe(
         map(messages => {
-          if (messages && messages.length > 0) return messages[0].text as string;
-          return '';
-        })
-      );
-  }
+          const response = { text: '', date: '' };
+          if (messages && messages.length > 0) {
+            response.text = messages[0].text as string;
+            response.date = messages[0].createdAt as string;
+          } else {
+            response.date = new Date().toISOString();
+          }
 
-  public lastChatMessageDate(chat: Chat): Observable<string> {
-    return of(chat.messages)
-      .pipe(
-        map(messages => {
-          if (messages && messages.length > 0) return (messages[0].createdAt as Date);
-          else if (messages && messages.length === 0) return chat.createdAt as Date;
-          return new Date();
-        }),
-        map(date => {
           const today = moment().startOf('day');
           const currentYear = moment().startOf('year');
-          const createdAt = moment(date);
+          const createdAt = moment(response.date);
           if (createdAt.isBefore(today)) {
-            if (createdAt.isBefore(currentYear)) return createdAt.format('DD/MM/YY HH:mm');
-            else return createdAt.format('DD/MM HH:mm');
+            if (createdAt.isBefore(currentYear)) response.date = createdAt.format('DD/MM/YY HH:mm');
+            else response.date = createdAt.format('DD/MM HH:mm');
+          } else {
+            response.date = createdAt.format('HH:mm');
           }
-          else return createdAt.format('HH:mm');
+
+          return response;
         })
       );
   }
@@ -117,9 +122,45 @@ export class ChatListComponent implements OnInit, OnDestroy, OnChanges {
       );
   }
 
+  public getMessagesUnreadCount(chat: Chat): Observable<number> {
+    const chatId = chat.id as string;
+    const userId = this.user.id as string;
+    return this.msgStore.select(selectMessagesUnreadCount({ chatId, userId }));
+  }
+
+  private getChatMessages(id: string): Observable<Message[]> {
+    return this.msgStore.select(selectMessagesByChatId({ id }));
+  }
+
   private getChats$(): Observable<Chat[]> {
     return this._chats$.asObservable()
       .pipe(map(chats => this.sortChats(chats)));
+  }
+
+  private onLastSeenCreated() {
+    this.service.lastSeenCreated$()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(lastSeen => this.store.dispatch(
+        updateChat({
+          update: {
+            id: lastSeen.chatId,
+            changes: { lastSeen },
+          }
+        }))
+      );
+  }
+
+  private onLastSeenUpdated() {
+    this.service.lastSeenUpdated$()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(lastSeen => this.store.dispatch(
+        updateChat({
+          update: {
+            id: lastSeen.chatId,
+            changes: { lastSeen },
+          }
+        }))
+      );
   }
 
   private sortChats(chats: Chat[]): Chat[] {
@@ -139,10 +180,6 @@ export class ChatListComponent implements OnInit, OnDestroy, OnChanges {
   private onNewMessage(): void {
     this.service.newMessage$()
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(newMessage => {
-        const chatIdx = this.chats.findIndex(c => c.id == newMessage.chatId);
-        this.chats[chatIdx]?.messages?.splice(0, 0, newMessage);
-        this._chats$.next(this.chats);
-      });
+      .subscribe(message => this.msgStore.dispatch(addMessage({ message })));
   }
 }

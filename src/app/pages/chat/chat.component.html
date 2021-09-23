@@ -16,6 +16,7 @@
     <chat-user-area [chats]="chats"></chat-user-area>
     <chat-list
       [chats]="chats"
+      [currentChat]="currentChat$ | async"
       (chatSelected)="changeSelectedChat($event)"
     ></chat-list>
   </ng-container>

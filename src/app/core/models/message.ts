@@ -9,7 +9,7 @@ export class Message {
   text: string;
   reply: boolean;
   user: User;
-  createdAt?: Date;
+  createdAt?: Date | string;
   files: NbChatMessageFile[];
   quote: string;
   latitude?: number;

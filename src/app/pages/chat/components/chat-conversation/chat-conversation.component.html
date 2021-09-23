@@ -11,7 +11,7 @@
       [message]="msg.text"
       [reply]="isReply$(msg) | async"
       [sender]="msg.user.name"
-      [date]="msg.createdAt!"
+      [date]="parseDate(msg)"
       [files]="msg.files"
       [quote]="msg.quote"
       [latitude]="msg.latitude || 0"

@@ -9,10 +9,10 @@ import { ChatService } from './chat.service';
 
 import { selectAllChats, selectCurrentChat } from './store/selectors/chat.selectors';
 import { loadChats, addChat, setCurrentChat } from './store/actions/chat.actions';
-import { addMessages, addMessage, loadMessages } from './store/actions/message.actions';
+import { loadMessages } from './store/actions/message.actions';
 import { ChatState } from './store/states';
 
-import { Chat, Message } from '@core/models';
+import { Chat } from '@core/models';
 
 @Component({
   selector: 'app-chat',

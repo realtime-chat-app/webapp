@@ -43,7 +43,6 @@ export class ChatStartNewChatComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.menuClickEvents();
-    // this.getUsers();
   }
 
   ngOnDestroy() {

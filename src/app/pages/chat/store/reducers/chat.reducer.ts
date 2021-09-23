@@ -11,6 +11,9 @@ const _chatReducer = createReducer(
   on(ChatActions.setChat, (state, { chat }) => {
     return chatAdapter.setOne(chat, state)
   }),
+  on(ChatActions.setCurrentChat, (state, { chat }) => {
+    return { ...state, currentChat: chat }
+  }),
   on(ChatActions.upsertChat, (state, { chat }) => {
     return chatAdapter.upsertOne(chat, state);
   }),

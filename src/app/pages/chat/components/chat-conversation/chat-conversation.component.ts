@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 
 import { ChatService } from '@pages/chat/chat.service';
 import { AuthService } from '@core/services';
@@ -39,9 +39,9 @@ export class ChatConversationComponent implements OnInit, OnDestroy, OnChanges {
     this.onNewMessage();
   }
 
-  ngOnChanges() {
-    if (this.chat?.messages) {
-      this.messages.push(...[...this.chat?.messages].reverse() as Message[]);
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.chat?.currentValue?.id !== changes.chat?.previousValue?.id) {
+      this.messages = [...this.chat?.messages as Message[]].reverse() as Message[];
     } else {
       this.messages = [];
     }
@@ -50,6 +50,10 @@ export class ChatConversationComponent implements OnInit, OnDestroy, OnChanges {
   ngOnDestroy() {
     this.unsubscribe$.next(true);
     this.unsubscribe$.complete();
+  }
+
+  public parseDate(message: Message): Date {
+    return message.createdAt as Date;
   }
 
   public chatTitle(chat: Chat): Observable<string> {
