@@ -16,6 +16,9 @@ const _messageReducer = createReducer(
   on(MessageActions.addMessages, (state, { messages }) => {
     return addMany(messages, state);
   }),
+  on(MessageActions.addChatEntry, (state, { chat }) => {
+    return addChatEntry(chat, state);
+  }),
 );
 
 export function messageReducer(state: _MessageState | undefined, action: Action) {
@@ -38,6 +41,12 @@ function addMany(messages: Message[], state: _MessageState): _MessageState {
   const newEntities: { [x: string]: Message[] } = JSON.parse(JSON.stringify(state.entities));
   newEntities[messages[0].chatId as string].push(...messages);
   newEntities[messages[0].chatId as string].sort(sortByLastMessageTimestamp);
+  return { ...state, entities: newEntities };
+}
+
+function addChatEntry(chat: Chat, state: _MessageState): _MessageState {
+  const newEntities: { [x: string]: Message[] } = JSON.parse(JSON.stringify(state.entities));
+  newEntities[chat.id as string] = [];
   return { ...state, entities: newEntities };
 }
 

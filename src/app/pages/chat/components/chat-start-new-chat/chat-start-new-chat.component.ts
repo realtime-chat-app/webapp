@@ -5,11 +5,14 @@ import { NbMenuService, NbWindowRef, NbWindowService } from '@nebular/theme';
 
 import { filter, map, startWith, take, takeUntil, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { Store } from '@ngrx/store';
 
 import { AuthService, UserService } from '@core/services';
 import { ChatService } from '@pages/chat/chat.service';
 
-import { Chat, User } from '@core/models';
+import { ChatState, setCurrentChat } from '@pages/chat/store';
+
+import { Chat, Member, User } from '@core/models';
 
 @Component({
   selector: 'chat-start-new-chat',
@@ -38,6 +41,7 @@ export class ChatStartNewChatComponent implements OnInit, OnDestroy {
     private menuService: NbMenuService,
     private authService: AuthService,
     private userService: UserService,
+    private store: Store<ChatState>,
     private service: ChatService,
   ) { }
 
@@ -66,6 +70,13 @@ export class ChatStartNewChatComponent implements OnInit, OnDestroy {
         isGroup: false,
         members: [user?.id],
       });
+      const duplicatedChat = this.chats.find((c) => (c.members as Member[]).find(m => m.userId == user.id));
+      if (duplicatedChat) {
+        this.changeSelectedChat(duplicatedChat);
+        this.form?.reset();
+        this.modalRef?.close();
+        return;
+      }
     } else {
       const ids = [];
       for (const id in this.form?.value) {
@@ -105,6 +116,10 @@ export class ChatStartNewChatComponent implements OnInit, OnDestroy {
           return shouldDisableBtn;
         }),
       );
+  }
+
+  private changeSelectedChat(chat: Chat) {
+    this.store.dispatch(setCurrentChat({ chat }));
   }
 
   private menuClickEvents(): void {

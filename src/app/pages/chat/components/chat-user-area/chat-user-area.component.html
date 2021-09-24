@@ -3,7 +3,7 @@
     <ng-container
       *ngTemplateOutlet="avatar; context: { user: (user$ | async) }"
     ></ng-container>
-    <chat-start-new-chat></chat-start-new-chat>
+    <chat-start-new-chat [chats]="chats"></chat-start-new-chat>
     <app-settings-menu></app-settings-menu>
   </nb-card-body>
 </nb-card>

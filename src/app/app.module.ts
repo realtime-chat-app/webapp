@@ -13,9 +13,10 @@ import {
   NbToastrModule,
   NbWindowModule,
 } from '@nebular/theme';
-import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { IConfig, NgxMaskModule } from 'ngx-mask';
+import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -27,6 +28,8 @@ import { JwtInterceptor } from '@core/interceptors';
 import { AppComponent } from './app.component';
 
 import { metaReducers, reducers } from '@store/reducers';
+import { ChatEffectsService } from '@pages/chat/store';
+
 import { environment } from '@environment/environment';
 
 registerLocaleData(localePt);
@@ -61,6 +64,7 @@ const maskConfigFunction: () => Partial<IConfig> = () => {
       maxAge: 25,
       logOnly: environment.production,
     }),
+    EffectsModule.forRoot([ChatEffectsService]),
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'pt-BR' },

@@ -4,6 +4,7 @@ import { createAction, props } from '@ngrx/store';
 import { MESSAGE_ACTIONS } from '../states';
 import { Chat, Message } from '@core/models';
 
+export const addChatEntry = createAction(MESSAGE_ACTIONS.AddChatEntry, props<{ chat: Chat }>());
 export const loadMessages = createAction(MESSAGE_ACTIONS.LoadMessages, props<{ chats: Chat[] }>());
 export const addMessage = createAction(MESSAGE_ACTIONS.AddMessage, props<{ message: Message }>());
 export const setMessage = createAction(MESSAGE_ACTIONS.SetMessage, props<{ message: Message }>());

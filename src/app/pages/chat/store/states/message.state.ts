@@ -1,6 +1,7 @@
 import { Message } from '@core/models';
 
 export enum MESSAGE_ACTIONS {
+  AddChatEntry = '[ChatEffects/Service] Add Chat Entry',
   LoadMessages = '[Message/Service] Load Messages',
   AddMessage = '[Message/Service] Add Message',
   SetMessage = '[Message/Service] Set Message',
