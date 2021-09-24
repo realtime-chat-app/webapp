@@ -29,7 +29,7 @@ export class ChatStartNewChatComponent implements OnInit, OnDestroy {
   public isGroup = false;
   public menuItems = [
     { id: 1, title: 'Nova Conversa' },
-    { id: 2, title: 'Novo Grupo' },
+    // { id: 2, title: 'Novo Grupo' },
   ];
   public menuTag = 'open-new-chat';
 

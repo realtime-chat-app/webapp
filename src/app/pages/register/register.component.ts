@@ -59,7 +59,7 @@ export class RegisterComponent {
           );
           setTimeout(() => {
             this.router.navigate(['login'], { queryParams: { email: user.email } });
-          }, 2000);
+          }, 1500);
         });
     };
   }
@@ -70,7 +70,7 @@ export class RegisterComponent {
     let errMsg = error.error.message.toLocaleLowerCase();
 
     if (errMsg.includes('is already taken')) {
-      title = 'E-mail já existe';
+      title = 'Este endereço de e-mail já está em uso';
       message = 'Tente outro endereço de e-mail';
     }
 
