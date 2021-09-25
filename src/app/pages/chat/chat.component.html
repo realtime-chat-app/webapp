@@ -1,13 +1,18 @@
 <div class="container">
-  <div>
+  <div
+    class="sider"
+    *ngIf="(!(currentChat$ | async) && mobileLayout) || !mobileLayout"
+  >
     <ng-container
       *ngTemplateOutlet="chatsContainer; context: { chats: (chats$ | async) }"
     >
     </ng-container>
   </div>
   <chat-conversation
+    *ngIf="((currentChat$ | async) && mobileLayout) || !mobileLayout"
     class="conversation"
     [chat]="currentChat$ | async"
+    (removeSelectedChat)="removeSelectedChat()"
   ></chat-conversation>
 </div>
 

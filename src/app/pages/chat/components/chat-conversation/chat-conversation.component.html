@@ -1,4 +1,13 @@
 <div class="container">
+  <button
+    *ngIf="chat"
+    class="mobile-back-btn"
+    nbButton
+    status="primary"
+    (click)="removeSelectedChat.emit()"
+  >
+    <nb-icon icon="arrow-left"></nb-icon>
+  </button>
   <nb-chat
     *ngIf="chat; else emptyChat"
     [title]="(chatTitle(chat!) | async)!"

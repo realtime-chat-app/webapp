@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { take, takeUntil } from 'rxjs/operators';
-import { Observable, Subject } from 'rxjs';
+import { fromEvent, Observable, Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
 
 import { AuthService } from '@core/services';
@@ -24,6 +24,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<boolean>();
   public currentChat$: Observable<Chat>;
   public chats$: Observable<Chat[]>;
+  public mobileLayout = window?.innerWidth <= 768 ? true : false;
 
   constructor(
     private authService: AuthService,
@@ -32,6 +33,13 @@ export class ChatComponent implements OnInit, OnDestroy {
   ) {
     this.chats$ = this.store.select(selectAllChats);
     this.currentChat$ = this.store.select(selectCurrentChat);
+    fromEvent(window, 'resize')
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((ev: any) => {
+        const innerWidth = ev.target.innerWidth;
+        if (innerWidth <= 768) this.mobileLayout = true;
+        else this.mobileLayout = false;
+      });
   }
 
   ngOnInit() {
@@ -46,6 +54,10 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   public changeSelectedChat(chat: Chat) {
     this.store.dispatch(setCurrentChat({ chat }));
+  }
+
+  public removeSelectedChat() {
+    this.store.dispatch(setCurrentChat({ chat: null }));
   }
 
   private getInitialChats() {

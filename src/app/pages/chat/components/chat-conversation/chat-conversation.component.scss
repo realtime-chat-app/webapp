@@ -29,3 +29,23 @@ nb-chat {
   justify-content: center;
   align-items: center;
 }
+
+.mobile-back-btn {
+  max-width: fit-content;
+  position: relative;
+  top: 47px;
+  z-index: 1;
+  left: 5px;
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  ::ng-deep {
+    nb-chat .header {
+      padding-left: 3rem !important;
+    }
+  }
+  .mobile-back-btn {
+    display: block;
+  }
+}
