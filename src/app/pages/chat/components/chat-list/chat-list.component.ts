@@ -56,6 +56,7 @@ export class ChatListComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public openChat(chat: Chat) {
+    if (chat.id === this.currentChat?.id) return;
     this.service.updateLastSeen(chat);
     this.chatSelected.emit(chat);
   }
