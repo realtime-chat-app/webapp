@@ -35,7 +35,7 @@ function _selectMessagesUnreadCount(state: ChatModuleState, chatId: string, user
   const messages = state.messages.entities[chatId];
   return messages.filter(m =>
     m.senderId != userId &&
-    moment(m.createdAt).isAfter(moment(chat?.lastSeen?.updatedAt || chat?.lastSeen?.createdAt))
+    (!chat?.lastSeen || moment(m.createdAt).isAfter(moment(chat?.lastSeen?.updatedAt || chat?.lastSeen?.createdAt)))
   ).length || 0;
 };
 
